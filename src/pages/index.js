@@ -68,7 +68,7 @@ export default function Home() {
   }
 
   else if (data || intitalData) {
-
+       
     if (intitalData.pokemons || data.pokemons) {
 
       if (isPageLoaded === true) {
@@ -112,20 +112,18 @@ export default function Home() {
         })}</Row></Container>
           : null}
       <br />
-      <Row>
-        <Col>
-          <Pagination size="md">
-            <Pagination.Prev onClick={() => { fetchPages("subtract"); }} />
-            <Pagination.Item active={pageNo === 1} onClick={() => { fetchPages("1"); }}>{1}</Pagination.Item>
-            <Pagination.Item active={pageNo === 2} onClick={() => { fetchPages("2"); }} >{2}</Pagination.Item>
-            <Pagination.Item active={pageNo === 3} onClick={() => { fetchPages("3"); }}>{3}</Pagination.Item>
-            <Pagination.Next onClick={() => { fetchPages("add"); }} />
-          </Pagination>
-        </Col>
-        <Col>
-          {pageNo != 1 ? <p>Page no {pageNo}</p> : null}
-        </Col>
-      </Row>
+
+      <Pagination size="md">
+        <Pagination.Prev onClick={() => { fetchPages("subtract"); }} />
+        <Pagination.Item active={pageNo === 1} onClick={() => { fetchPages("1"); }}>{1}</Pagination.Item>
+        <Pagination.Item active={pageNo === 2} onClick={() => { fetchPages("2"); }} >{2}</Pagination.Item>
+        <Pagination.Item active={pageNo === 3} onClick={() => { fetchPages("3"); }}>{3}</Pagination.Item>
+        {pageNo !== 1 && pageNo !== 2 && pageNo !== 3 && pageNo !== 4 ? <Pagination.Item onClick={() => { fetchPages("subtract"); }}>{pageNo - 1}</Pagination.Item> : null}
+        {pageNo !== 1 && pageNo !== 2 && pageNo !== 3 ? <Pagination.Item active={pageNo !== 1 && pageNo !== 2 && pageNo !== 3}>{pageNo}</Pagination.Item> : null}
+        <Pagination.Next onClick={() => { fetchPages("add"); }} />
+      </Pagination>
+
+
 
     </Container>);
   }
