@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import PokemonCards from "@/components/PokemonCards";
 import { Col, Container, Row } from "react-bootstrap";
+
 export default function Home() {
 
   const [getPokemons, { loading, data, error }] = useLazyQuery(getPokemonQuery(), { variables: { first: 60 }, });
@@ -52,7 +53,7 @@ if(data){
 
     {
       data ? <Container><Row>{pokemons.map((data) => {
-        return (<Col sm={6} md={3} style={{ marginTop: "1%" }}>
+        return (<Col sm={6} md={3} style={{ marginTop: "1%" }} key={data.id}>
           <PokemonCards image={data.image} name={data.name} number={data.number} id={data.id} types={data.types} /> </Col>)
       })}</Row></Container>
         : null}</Container>);

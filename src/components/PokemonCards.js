@@ -1,21 +1,13 @@
-import { Badge,Button,Card,Row } from 'react-bootstrap';
-
+import {Card,Row } from 'react-bootstrap';
+import { useRouter } from 'next/router'
+import PokemontypeBadge from './PokemontypeBadge';
+import { v4 as uuidv4 } from 'uuid';
 function PokemonCards(props) {
-
-    const badgeStyle={
-    "Fire":"#FFA500",
-    "Water":"#00008b",
-    "Normal":"#964b00",
-    "Fighting":"#5A5A5A",
-    "Grass":"#006600",
-    "Poison":"#990099",
-    "Ground":"#996633",
-    "Bug":"#90EE90",
-    "Flying":"#76d1e8"
-}
+const router=useRouter();
+const url="/"+props.id+"/"+props.name;
     return (
 
-        <Card style={{cursor:"pointer"}}onClick={()=>{console.log("HELLO");}}>
+        <Card style={{cursor:"pointer"}}onClick={()=>{router.push(url)}}>
             {props.image ? <center><Card.Img src={props.image} style={{ width: "100px", height: "100px",marginTop:"4px" }}></Card.Img> </center>: <></>}
             <br/>
             <Card.Body>
@@ -30,7 +22,7 @@ function PokemonCards(props) {
                 {props.types?<Row xs={3} sm={4} md={4}> {
                     props.types.map((type)=>{
                     return(
-                        <Badge  style={{marginLeft:"10px",backgroundColor:badgeStyle[type]}} bg={badgeStyle[type]} > {type}</Badge>
+                        <PokemontypeBadge key={uuidv4()} type={type}/>
                     );
                     
                 })}
