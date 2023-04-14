@@ -30,7 +30,8 @@ export default function Home() {
     if (pageType === "add") {
       if (pageNo !== 2 && pageNo !== 1)
         getPokemons(getPokemonQuery(), { variables: { first: pageNo * 20 }, });
-      setPageNo(pageNo + 1);
+      if (pageNo < 8)
+        setPageNo(pageNo + 1);
     }
     else if (pageType === "subtract") {
       if (pageNo !== 1) {
@@ -68,7 +69,7 @@ export default function Home() {
   }
 
   else if (data || intitalData) {
-       
+
     if (intitalData.pokemons || data.pokemons) {
 
       if (isPageLoaded === true) {
