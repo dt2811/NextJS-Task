@@ -6,7 +6,6 @@ function PokemonCards(props) {
 const router=useRouter();
 const url="/"+props.id+"/"+props.name;
     return (
-
         <Card style={{cursor:"pointer"}}onClick={()=>{router.push(url)}}>
             {props.image ? <center><Card.Img src={props.image} style={{ width: "100px", height: "100px",marginTop:"4px" }}></Card.Img> </center>: <></>}
             <br/>

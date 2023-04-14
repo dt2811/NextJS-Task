@@ -8,20 +8,23 @@ import PokemontypeBadge from '@/components/PokemontypeBadge';
 import { v4 as uuidv4 } from 'uuid';
 import EvolModal from '@/components/EvolModal';
 import WarningToast from '@/components/WarningToast';
+import classes from '../../styles/pokemonDetails.module.css';
+
 export default function PokemonDetails() {
     const router = useRouter();
-    const [show, setShow] = useState(false);
-    const [modalData, setModalData] = useState([]);
-    const [showToast, setShowToast] = useState(false);
+    const [show, setShow] = useState(false); // state for controling modal
+    const [modalData, setModalData] = useState([]); // state for controling modal data
+    const [showToast, setShowToast] = useState(false); // state for controling toast
+    const handleClose = () => setShow(false); // function to close modal
+    const handleCloseToast = () => setShowToast(false); // function to close toast
     const id = router.query.id;
-    var name = router.query.pokemon;
-    const handleClose = () => setShow(false);
-    const handleCloseToast = () => setShowToast(false);
-    const { data, loading, error } = useQuery(getPokemonDetailQuery(), { variables: { id: id, name: name }, });
-    const [getPokemonEvoultion, { loading: evolloading, data: evoldata, error: evolerror }] = useLazyQuery(getEvolutionQuery(), { variables: { id: id, name: name }, });
+    const name = router.query.pokemon;
+    const { data, loading, error } = useQuery(getPokemonDetailQuery(), { variables: { id: id, name: name }, }); // query to get pokemon details
+    const [getPokemonEvoultion, { loading: evolloading, data: evoldata, error: evolerror }] = useLazyQuery(getEvolutionQuery(), { variables: { id: id, name: name }, }); // query to get evolution pokemon details
 
-    function fetchEvolutions() {
-        getPokemonEvoultion(getEvolutionQuery(), { id: id, name: name });
+
+    function fetchEvolutions() { // function to fetch pokemons 
+
         if (evoldata) {
             if (evoldata.pokemon.evolutions && evoldata.pokemon.evolutions.length > 0) {
                 let pokeData = Array.from(evoldata.pokemon.evolutions);
@@ -33,6 +36,9 @@ export default function PokemonDetails() {
                 setShowToast(true);
             }
         }
+        else {
+            getPokemonEvoultion(getEvolutionQuery(), { id: id, name: name });
+        }
     }
 
 
@@ -40,12 +46,18 @@ export default function PokemonDetails() {
         return <h2><a href="#loading" aria-hidden="true" className="aal_anchor" id="loading"><svg aria-hidden="true" className="aal_svg" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fillRule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Loading...</h2>;
     }
 
-    if (error) {
+    else if (error) {
         console.error(error);
         return null;
     }
-
-    if (data) {
+    else if (evolloading) {
+        return <h2><a href="#loading" aria-hidden="true" className="aal_anchor" id="loading"><svg aria-hidden="true" className="aal_svg" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fillRule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Loading...</h2>;
+    }
+    else if (evolerror) {
+        console.error(error);
+        return null;
+    }
+    else if (data && data.pokemon) {
 
         return (
             <Container>
@@ -64,18 +76,18 @@ export default function PokemonDetails() {
                                 <Card.Body>
                                     <Row>
                                         {data.pokemon.weight ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Weight</h3>
-                                            <h4 style={{ color: "#212121", fontSize: "20px" }}>{data.pokemon.weight.maximum}</h4>
+                                            <h3 className={classes.titles}>Weight</h3>
+                                            <h4 className={classes.subtitles}>{data.pokemon.weight.maximum}</h4>
                                         </Col> : null}
                                         {data.pokemon.height ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Height</h3>
-                                            <h4 style={{ color: "#212121", fontSize: "20px" }}>{data.pokemon.height.maximum}</h4>
+                                            <h3 className={classes.titles}>Height</h3>
+                                            <h4 className={classes.subtitles}>{data.pokemon.height.maximum}</h4>
                                         </Col> : null}
                                     </Row>
                                     <br />
                                     <Row>
                                         {data.pokemon.types ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Type</h3>
+                                            <h3 className={classes.titles}>Type</h3>
                                             {data.pokemon.types ? <Row xs={3} sm={4} md={5}> {
                                                 data.pokemon.types.map((type) => {
                                                     return (
@@ -87,20 +99,20 @@ export default function PokemonDetails() {
 
                                         </Col> : null}
                                         {data.pokemon.classification ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Classification</h3>
-                                            <h4 style={{ color: "#212121", fontSize: "20px" }}>{data.pokemon.classification}</h4>
+                                            <h3 className={classes.titles}>Classification</h3>
+                                            <h4 className={classes.subtitles}>{data.pokemon.classification}</h4>
                                         </Col> : null}
                                     </Row>
                                     <br />
                                     <Row>
                                         {data.pokemon.resistant ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Resistant</h3>
+                                            <h3 className={classes.titles}>Resistant</h3>
                                             {data.pokemon.resistant ? <Row xs={3} sm={4} md={5}> {
                                                 data.pokemon.resistant.map((type) => {
                                                     return (
-                                                        <div>
-                                                            <PokemontypeBadge key={uuidv4()} type={type} />
-                                                        </div>
+
+                                                        <PokemontypeBadge key={uuidv4()} type={type} />
+
                                                     );
 
                                                 })}
@@ -109,7 +121,7 @@ export default function PokemonDetails() {
                                         </Col> : null}
 
                                         {data.pokemon.weaknesses ? <Col>
-                                            <h3 style={{ color: "#fff", fontSize: "18px" }}>Weaknesses</h3>
+                                            <h3 className={classes.titles}>Weaknesses</h3>
                                             {data.pokemon.weaknesses ? <Row xs={3} sm={4} md={5}> {
                                                 data.pokemon.weaknesses.map((type) => {
                                                     return (
